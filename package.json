@@ -5,11 +5,9 @@
   "main": "app.ts",
   "scripts": {
     "start": "cross-env NODE_ENV=development ts-node src/app.ts",
-    "production": "cross-env NODE_ENV=production ts-node src/app.ts",
-    "deploy:dev": "vercel --prod",
-    "deploy:prod": "vercel --prod",
-    "test": "jest --detectOpenHandles"
-
+    "production": "tsc && cross-env NODE_ENV=production node dist/app.js",
+    "test": "jest --detectOpenHandles",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
