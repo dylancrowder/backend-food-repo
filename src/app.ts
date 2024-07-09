@@ -72,7 +72,9 @@ app.use((req, res, next) => {
 
 app.use("/api", productRouter);
 app.use("/api/cart", cartRouter);
-
+app.get("/", (req, res) => {
+  res.send("funciona");
+});
 app.use(morgan("dev"));
 
 app.use(errorHandlerMiddleware);
