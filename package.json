@@ -2,7 +2,7 @@
   "name": "backendfood",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.ts",
   "scripts": {
     "start": "cross-env NODE_ENV=development ts-node src/app.ts",
     "production": "cross-env NODE_ENV=production ts-node src/app.ts",
