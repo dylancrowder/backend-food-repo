@@ -4,11 +4,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/src/app.ts"
+      "dest": "/dist/app.js"
     }
-  ],
-  "env": {
-    "PORT": "8080",
-    "DB_KEY": "mongodb+srv://devdylancrowder:dilan_07@cluster0.pbvemm9.mongodb.net/production"
-  }
+  ]
 }
