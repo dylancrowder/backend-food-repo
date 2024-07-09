@@ -67,12 +67,13 @@ app.use((req, res, next) => {
 
   next();
 });
+app.get("/", (req, res) => {
+  res.send("¡Bienvenido a mi aplicación en Vercel!");
+});
 
 app.use("/api", productRouter);
 app.use("/api/cart", cartRouter);
-app.get("/", (req, res) => {
-  res.send("funciona correctamente");
-});
+
 app.use(morgan("dev"));
 
 app.use(errorHandlerMiddleware);
