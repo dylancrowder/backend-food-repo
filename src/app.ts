@@ -71,7 +71,7 @@ app.use((req, res, next) => {
 app.use("/api", productRouter);
 app.use("/api/cart", cartRouter);
 app.get("/", (req, res) => {
-  res.send("funciona");
+  res.send("funciona correctamente");
 });
 app.use(morgan("dev"));
 
