@@ -10,9 +10,10 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "outDir": "./dis"
+    "outDir": "./dist"
   },
   "include": [
-    "src/**/*.ts"
-, "src/app.ts"  ]
+    "src/**/*.ts",
+    "src/app.ts"
+  ]
 }
