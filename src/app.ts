@@ -59,8 +59,6 @@ app.use(
 
 app.use((req, res, next) => {
   if (!req.session.user) {
-    console.log("esta es la session actual", req.cookies, req.sessionID);
-
     req.session.user = { id: Date.now() };
     console.log("Nueva sesión creada:", req.session.user.id);
   } else {
