@@ -1,0 +1,19 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "app.ts",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "/app.ts"
+      }
+    ],
+    "env": {
+      "PORT": "8080",
+    "DB_KEY":"mongodb+srv://devdylancrowder:dilan_07@cluster0.pbvemm9.mongodb.net/production"
+ }
+}
