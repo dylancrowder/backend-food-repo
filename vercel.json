@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "routes": [
+  "builds": [
     {
-      "src": "/(.*)",
-      "dest": "dist/app.js"
+      "src": "src/**/*.ts",
+      "use": "@now/node"
     }
   ],
-  "builds": [
-    { "src": "src/app.ts", "use": "@now/node-ts" }
+  "routes": [
+    { "src": "/(.*)", "dest": "dist/app.js" }
   ],
   "env": {
     "NODE_ENV": "production",
