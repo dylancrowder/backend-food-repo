@@ -10,7 +10,13 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
 
-dotenv.config();
+// Cargar el archivo .env adecuado según el entorno
+dotenv.config({
+  path:
+    process.env.NODE_ENV === "production"
+      ? ".env.production"
+      : ".env.development",
+});
 
 initMongo();
 
@@ -33,7 +39,9 @@ app.use(
     saveUninitialized: false,
     store: MongoStore.create({
       mongoUrl:
-        "mongodb+srv://devdylancrowder:dilan_07@cluster0.pbvemm9.mongodb.net/",
+        process.env.NODE_ENV === "production"
+          ? process.env.DB_KEY
+          : process.env.DB_KEY,
     }),
     cookie: {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 semana
@@ -41,12 +49,14 @@ app.use(
     },
   })
 );
+
 app.use(
   cors({
     origin: true,
     credentials: true, // Permite el envío de cookies y cabeceras de autorización
   })
 );
+
 app.use((req, res, next) => {
   if (!req.session.user) {
     console.log("esta es la session actual", req.cookies, req.sessionID);
