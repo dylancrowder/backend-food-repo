@@ -2,16 +2,15 @@
   "version": 2,
   "builds": [
     {
-      "src": "src/**/*.ts",
-      "use": "@now/node"
+      "src": "src/app.ts",
+      "use": "@vercel/node",
+      "config": { "includeFiles": ["src/**/*"] }
     }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "dist/app.js" }
-  ],
-  "env": {
-    "NODE_ENV": "production",
-    "PORT": "8080",
-    "DB_KEY": "mongodb+srv://devdylancrowder:dilan_07@cluster0.pbvemm9.mongodb.net/production"
-  }
+    {
+      "src": "/(.*)",
+      "dest": "/src/app.ts"
+    }
+  ]
 }
