@@ -10,7 +10,6 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
 
-// Cargar el archivo .env adecuado según el entorno
 dotenv.config({
   path:
     process.env.NODE_ENV === "production"
@@ -24,12 +23,9 @@ const app = express();
 
 const PORT = process.env.PORT || 8080;
 
-// Configurar body-parser antes de las sesiones
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Configurar CORS para permitir el envío de cookies
 
 // Configurar sesiones
 app.use(
@@ -44,7 +40,7 @@ app.use(
           : process.env.DB_KEY,
     }),
     cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 semana
+      maxAge: 7 * 24 * 60 * 60 * 1000,
       secure: false,
     },
   })
@@ -53,13 +49,21 @@ app.use(
 app.use(
   cors({
     origin: true,
-    credentials: true, // Permite el envío de cookies y cabeceras de autorización
+    credentials: true,
   })
 );
 
+declare module "express-session" {
+  interface SessionData {
+    user: {
+      id: any;
+    };
+  }
+}
+
 app.use((req, res, next) => {
   if (!req.session.user) {
-    req.session.user = { id: Date.now() };
+    req.session.user = { id: Date.now().toString() };
     console.log("Nueva sesión creada:", req.session.user.id);
   } else {
     console.log("Sesión existente:", req.session.user.id);
