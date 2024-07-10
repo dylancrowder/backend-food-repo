@@ -64,7 +64,12 @@ declare module "express-session" {
 app.use((req, res, next) => {
   if (!req.session.user) {
     req.session.user = { id: Date.now().toString() };
-    console.log("Nueva sesión creada:", req.session.user.id);
+    console.log(
+      "Nueva sesión creada:",
+      req.session.user.id,
+      "en el puerto",
+      PORT
+    );
   } else {
     console.log("Sesión existente:", req.session.user.id);
   }
