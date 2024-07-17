@@ -76,8 +76,9 @@ app.use((req, res, next) => {
 
   next();
 });
+const mode = process.env.NODE_ENV;
 app.get("/", (req, res) => {
-  res.send("¡Bienvenido a mi aplicación en Vercel!");
+  res.send(`hola vercel${mode}`);
 });
 
 app.use("/api", productRouter);
