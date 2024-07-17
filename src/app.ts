@@ -39,7 +39,7 @@ app.use(
       sameSite: "none", // Para permitir cookies de terceros
     },
     store: MongoStore.create({
-      mongoUrl: process.env.DB_KEY || "mongodb://localhost:27017/session-store",
+      mongoUrl: process.env.DB_KEY,
       ttl: 7 * 24 * 60 * 60, // Tiempo de vida máximo en segundos (opcional)
       autoRemove: "native", // Para limpiar automáticamente las sesiones expiradas (opcional)
     }),
@@ -49,7 +49,7 @@ app.use(
 // CORS
 app.use(
   cors({
-    origin: true,
+    origin: "https://ecommerce-food-dylan.netlify.app",
     credentials: true,
   })
 );
