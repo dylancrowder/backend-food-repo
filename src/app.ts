@@ -17,36 +17,36 @@ dotenv.config({
       : ".env.development",
 });
 
-initMongo();
+initMongo(); // Inicializar conexión a MongoDB
 
 const app = express();
-
 const PORT = process.env.PORT || 8080;
 
+// Middleware
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configurar sesiones
+// Configuración de sesiones
 app.use(
   session({
-    secret: "123",
+    secret: process.env.SESSION_SECRET || "your-secret-key",
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl:
-        process.env.NODE_ENV === "production"
-          ? process.env.DB_KEY
-          : process.env.DB_KEY,
-    }),
     cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      secure: false,
-      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días en milisegundos
+      secure: process.env.NODE_ENV === "production", // true si solo se usa HTTPS
+      sameSite: "none", // Para permitir cookies de terceros
     },
+    store: MongoStore.create({
+      mongoUrl: process.env.DB_KEY || "mongodb://localhost:27017/session-store",
+      ttl: 7 * 24 * 60 * 60, // Tiempo de vida máximo en segundos (opcional)
+      autoRemove: "native", // Para limpiar automáticamente las sesiones expiradas (opcional)
+    }),
   })
 );
 
+// CORS
 app.use(
   cors({
     origin: true,
@@ -54,6 +54,7 @@ app.use(
   })
 );
 
+// En algún lugar antes de donde estás usando req.session.user
 declare module "express-session" {
   interface SessionData {
     user: {
@@ -62,6 +63,7 @@ declare module "express-session" {
   }
 }
 
+// Middleware para gestionar sesiones
 app.use((req, res, next) => {
   if (!req.session.user) {
     req.session.user = { id: Date.now().toString() };
@@ -74,21 +76,26 @@ app.use((req, res, next) => {
   } else {
     console.log("Sesión existente:", req.session.user.id);
   }
-
   next();
 });
-const mode = process.env.NODE_ENV;
+
+// Ruta de inicio
 app.get("/", (req, res) => {
-  res.send(`hola vercel${mode}`);
+  const mode = process.env.NODE_ENV;
+  res.send(`Hola Vercel! Modo: ${mode}`);
 });
 
+// Rutas de API
 app.use("/api", productRouter);
 app.use("/api/cart", cartRouter);
 
+// Middleware de registro de solicitudes
 app.use(morgan("dev"));
 
+// Middleware de manejo de errores
 app.use(errorHandlerMiddleware);
 
+// Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
