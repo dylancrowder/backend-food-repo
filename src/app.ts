@@ -17,45 +17,42 @@ dotenv.config({
       : ".env.development",
 });
 
-initMongo(); // Inicializar conexión a MongoDB
+initMongo();
 
 const app = express();
+
 const PORT = process.env.PORT || 8080;
 
-// Middleware
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configuración de sesiones
+// Configurar sesiones
 app.use(
   session({
     secret: "123",
     resave: false,
     saveUninitialized: false,
-    cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días en milisegundos
-      secure: true,
-      sameSite: "none", // Para permitir cookies de terceros
-    },
     store: MongoStore.create({
       mongoUrl:
-        "mongodb+srv://devdylancrowder:dilan_07@cluster0.pbvemm9.mongodb.net/",
-      ttl: 7 * 24 * 60 * 60, // Tiempo de vida máximo en segundos (opcional)
-      autoRemove: "native", // Para limpiar automáticamente las sesiones expiradas (opcional)
+        process.env.NODE_ENV === "production"
+          ? process.env.DB_KEY
+          : process.env.DB_KEY,
     }),
+    cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === "production",
+    },
   })
 );
 
-// CORS
 app.use(
   cors({
-    origin: "https://ecommerce-food-dylan.netlify.app",
+    origin: true,
     credentials: true,
   })
 );
 
-// En algún lugar antes de donde estás usando req.session.user
 declare module "express-session" {
   interface SessionData {
     user: {
@@ -64,7 +61,6 @@ declare module "express-session" {
   }
 }
 
-// Middleware para gestionar sesiones
 app.use((req, res, next) => {
   if (!req.session.user) {
     req.session.user = { id: Date.now().toString() };
@@ -77,26 +73,20 @@ app.use((req, res, next) => {
   } else {
     console.log("Sesión existente:", req.session.user.id);
   }
+
   next();
 });
-
-// Ruta de inicio
 app.get("/", (req, res) => {
-  const mode = process.env.NODE_ENV;
-  res.send(`Hola Vercel! Modo: ${mode}`);
+  res.send("¡Bienvenido a mi aplicación en Vercel!");
 });
 
-// Rutas de API
 app.use("/api", productRouter);
 app.use("/api/cart", cartRouter);
 
-// Middleware de registro de solicitudes
 app.use(morgan("dev"));
 
-// Middleware de manejo de errores
 app.use(errorHandlerMiddleware);
 
-// Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
