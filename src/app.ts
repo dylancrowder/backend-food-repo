@@ -39,7 +39,8 @@ app.use(
       sameSite: "none", // Para permitir cookies de terceros
     },
     store: MongoStore.create({
-      mongoUrl: process.env.DB_KEY,
+      mongoUrl:
+        "mongodb+srv://devdylancrowder:dilan_07@cluster0.pbvemm9.mongodb.net/",
       ttl: 7 * 24 * 60 * 60, // Tiempo de vida máximo en segundos (opcional)
       autoRemove: "native", // Para limpiar automáticamente las sesiones expiradas (opcional)
     }),
