@@ -35,7 +35,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días en milisegundos
-      secure: process.env.NODE_ENV === "production", // true si solo se usa HTTPS
+      secure: true,
       sameSite: "none", // Para permitir cookies de terceros
     },
     store: MongoStore.create({
