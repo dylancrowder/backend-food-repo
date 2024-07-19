@@ -1,16 +1,35 @@
 {
   "version": 2,
+  "env": {
+    "PORT": "8080",
+    "DB_KEY": "mongodb+srv://devdylancrowder:dilan_07@cluster0.pbvemm9.mongodb.net/"
+  },
   "builds": [
     {
       "src": "src/app.ts",
       "use": "@vercel/node",
-      "config": { "includeFiles": ["src/**/*"] }
+      "config": {
+        "includeFiles": [
+          "src/**/*"
+        ]
+      }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/src/app.ts"
+      "dest": "src/app.ts",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "PATCH",
+        "OPTIONS"
+      ],
+      "headers": {
+        "Acces-Control-Allow-Origin": "*"
+      }
     }
   ]
 }
