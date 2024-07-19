@@ -30,7 +30,10 @@ app.use(express.urlencoded({ extended: true }));
 // Configurar CORS
 app.use(
   cors({
-    origin: true,
+    origin: [
+      "http://localhost:5173",
+      "https://ecommerce-food-dylan.netlify.app",
+    ],
     credentials: true,
     methods: ["GET", "POST", "PATCH", "DELETE", "PUT", "OPTIONS"],
     allowedHeaders: [
@@ -74,10 +77,7 @@ declare module "express-session" {
 }
 
 app.use((req, res, next) => {
-  console.log(
-    "esta es la session existente en el moment  y mi key de mg",
-    req.session.user
-  );
+  console.log("esta es la session existente en el moment", req.session.user);
 
   if (!req.session.user) {
     req.session.user = { id: Date.now().toString() };
