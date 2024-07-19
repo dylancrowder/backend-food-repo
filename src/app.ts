@@ -73,6 +73,8 @@ declare module "express-session" {
 }
 
 app.use((req, res, next) => {
+  console.log("esta es la session existente en el moment ", req.session.user);
+
   if (!req.session.user) {
     req.session.user = { id: Date.now().toString() };
     console.log(
