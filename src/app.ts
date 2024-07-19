@@ -85,7 +85,7 @@ app.use((req, res, next) => {
     console.log(
       "Nueva sesión creada:",
       req.session.user.id,
-      "en el puerto",
+      "en el puersto",
       PORT
     );
   } else {
