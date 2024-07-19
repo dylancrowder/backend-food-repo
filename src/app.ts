@@ -35,19 +35,6 @@ app.use(
       "https://ecommerce-food-dylan.netlify.app",
     ],
     credentials: true,
-    methods: ["GET", "POST", "PATCH", "DELETE", "PUT", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "X-CSRF-Token",
-      "X-Requested-With",
-      "Accept",
-      "Accept-Version",
-      "Content-Length",
-      "Content-MD5",
-      "Date",
-      "X-Api-Version",
-    ],
   })
 );
 
