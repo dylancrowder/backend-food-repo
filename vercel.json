@@ -28,14 +28,9 @@
         "OPTIONS"
       ],
       "headers": {
-        "Access-Control-Allow-Origin": "*"
+        "Acces-Control-Allow-Origin": "https://ecommerce-food-dylan.netlify.app",
+        "Access-Control-Allow-Credentials": "true"
       }
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://bknd-seven.vercel.app/api/$1"
     }
   ]
 }
