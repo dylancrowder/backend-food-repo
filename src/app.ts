@@ -22,7 +22,7 @@ initMongo();
 const app = express();
 
 const PORT = process.env.PORT || 8080;
-
+app.set("trust proxy", 1);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -60,6 +60,7 @@ app.use(
     cookie: {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       secure: true,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     },
   })
 );
@@ -75,8 +76,7 @@ declare module "express-session" {
 app.use((req, res, next) => {
   console.log(
     "esta es la session existente en el moment  y mi key de mg",
-    req.session.user,
-    process.env.DB_KEY
+    req.session.user
   );
 
   if (!req.session.user) {
