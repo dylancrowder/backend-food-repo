@@ -27,22 +27,6 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configurar sesiones
-app.use(
-  session({
-    secret: "123",
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.DB_KEY,
-    }),
-    cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      secure: true,
-    },
-  })
-);
-
 // Configurar CORS
 app.use(
   cors({
@@ -64,6 +48,22 @@ app.use(
   })
 );
 
+// Configurar sesiones
+app.use(
+  session({
+    secret: "123",
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.DB_KEY,
+    }),
+    cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: true,
+    },
+  })
+);
+
 declare module "express-session" {
   interface SessionData {
     user: {
@@ -73,7 +73,11 @@ declare module "express-session" {
 }
 
 app.use((req, res, next) => {
-  console.log("esta es la session existente en el moment ", req.session.user);
+  console.log(
+    "esta es la session existente en el moment  y mi key de mg",
+    req.session.user,
+    process.env.DB_KEY
+  );
 
   if (!req.session.user) {
     req.session.user = { id: Date.now().toString() };
