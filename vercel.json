@@ -28,8 +28,14 @@
         "OPTIONS"
       ],
       "headers": {
-        "Acces-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*"
       }
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://bknd-seven.vercel.app/api/$1"
     }
   ]
 }
