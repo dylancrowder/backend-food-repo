@@ -5,10 +5,10 @@ import { CartService } from "../services/cart.services";
 const router = express.Router();
 
 /* create  */
-router.post("/create", async (req, res, next) => {
+router.post("/create", async (req: any, res, next) => {
   try {
     const { productID } = req.body;
-    const sessionI: any = req.session.user?.id.toString();
+    const sessionI: any = req.device;
 
     const product = await CartController.buy(sessionI, productID);
 
@@ -20,11 +20,9 @@ router.post("/create", async (req, res, next) => {
 
 //find
 
-
-
-router.get("/find", async (req, res, next) => {
+router.get("/find", async (req: any, res, next) => {
   try {
-    const cartID: string = req.session?.user?.id.toString();
+    const cartID: string = req.device;
     const cart = await CartService.findOne(cartID);
 
     res.status(200).json(cart);
@@ -33,10 +31,10 @@ router.get("/find", async (req, res, next) => {
   }
 });
 /* delete all products */
-router.delete("/delete/:productID", async (req, res, next) => {
+router.delete("/delete/:productID", async (req:any, res, next) => {
   try {
     const { productID } = req.params;
-    const session = req.session?.user?.id.toString();
+    const session = req.device;
 
     const deleteProduct = await CartController.deleteOne(session, productID);
 
@@ -47,10 +45,10 @@ router.delete("/delete/:productID", async (req, res, next) => {
 });
 
 /* delete one product */
-router.delete("/decrement/:productID", async (req, res, next) => {
+router.delete("/decrement/:productID", async (req: any, res, next) => {
   try {
     const { productID } = req.params;
-    const session = req.session?.user?.id.toString();
+    const session = req.device;
 
     if (!session) {
       return res.status(401).json({ message: "Unauthorized" });
@@ -66,10 +64,10 @@ router.delete("/decrement/:productID", async (req, res, next) => {
   }
 });
 /* add one product */
-router.post("/increment/:productID", async (req, res, next) => {
+router.post("/increment/:productID", async (req: any, res, next) => {
   try {
     const { productID } = req.params;
-    const session = req.session?.user?.id.toString();
+    const session = req.device;
 
     if (!session) {
       return res.status(401).json({ message: "Unauthorized" });

@@ -27,8 +27,6 @@ router.get("/all", async (req, res, next) => {
 /* four */
 router.get("/four", async (req, res) => {
   const products = await ProductController.four();
-  console.log("esta es la sesssion en four", req.session);
-
   res.status(200).json(products);
 });
 
