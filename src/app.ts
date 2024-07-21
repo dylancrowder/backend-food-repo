@@ -38,65 +38,34 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://food-ecommerce-coral.vercel.app"
-  );
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET,POST,PUT,DELETE,PATCH,OPTIONS"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version"
-  );
-  next();
-});
+const SECRET_KEY = "tu_clave_secreta";
+app.use((req: any, res, next) => {
+  const token = req.cookies.token; // Obtener el token de la cookie
+  console.log("este es el token", token);
+  if (!token) {
+    const uuid = uuidv4();
+    const token: any = jwt.sign({ device: uuid }, SECRET_KEY, {
+      algorithm: "HS256",
+      expiresIn: "30d", // El token expira en 30 días
+    });
 
-// Configurar sesiones
-app.use(
-  session({
-    secret: "123",
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.DB_KEY,
-    }),
-    cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
+    // Establece el token en una cookie segura con atributos SameSite y Secure
+    res.cookie("token", token, {
+      httpOnly: true, // No accesible desde JavaScript del lado del cliente
       secure: true,
-      sameSite: "lax",
-    },
-  })
-);
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días en milisegundos
+      sameSite: "none", // Cambia a 'Strict' o 'Lax' si no necesitas soporte para cookies de terceros
+    });
 
-declare module "express-session" {
-  interface SessionData {
-    user: {
-      id: any;
-    };
+    return res.json({ message: token });
   }
-}
-
-app.use((req, res, next) => {
-  console.log("esta es la session existente en el moment", req.session.user);
-
-  if (!req.session.user) {
-    req.session.user = { id: Date.now().toString() };
-    console.log(
-      "Nueva sesión creada:",
-      req.session.user.id,
-      "en el puersto",
-      PORT
-    );
-  } else {
-    console.log("Sesión existente:", req.session.user.id);
-  }
-
-  next();
+  jwt.verify(token, SECRET_KEY, (err: any, decoded: any) => {
+    if (err) {
+      return res.status(403).send("Invalid token");
+    }
+    req.device = decoded.device;
+    next();
+  });
 });
 
 app.get("/", (req: any, res) => {
