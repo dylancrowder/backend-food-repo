@@ -6,10 +6,10 @@ import { errorHandlerMiddleware } from "./errors/middlewareError";
 import productRouter from "./router/products.router";
 import cartRouter from "./router/cart.router";
 import cors from "cors";
-import session from "express-session";
-import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
-
+import { v4 as uuidv4 } from "uuid";
+import bodyParser from "body-parser";
+import jwt from "jsonwebtoken";
 dotenv.config({
   path:
     process.env.NODE_ENV === "production"
@@ -20,7 +20,7 @@ dotenv.config({
 initMongo();
 
 const app = express();
-
+app.use(bodyParser.json());
 const PORT = process.env.PORT || 8080;
 app.set("trust proxy", 1);
 app.use(cookieParser());
@@ -38,6 +38,23 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://food-ecommerce-coral.vercel.app"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET,POST,PUT,DELETE,PATCH,OPTIONS"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version"
+  );
+  next();
+});
+
 // Configurar sesiones
 app.use(
   session({
@@ -51,7 +68,7 @@ app.use(
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
       secure: true,
-      sameSite: "none",
+      sameSite: "lax",
     },
   })
 );
@@ -82,8 +99,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
-  res.send("¡Bienvenido a mi aplicación en Vercel!");
+app.get("/", (req: any, res) => {
+  console.log("esto devuelve device", req.device);
+
+  res.send({ message: "This is a protected route", device: req.device });
 });
 
 app.use("/api", productRouter);
