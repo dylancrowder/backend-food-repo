@@ -6,10 +6,10 @@ import { errorHandlerMiddleware } from "./errors/middlewareError";
 import productRouter from "./router/products.router";
 import cartRouter from "./router/cart.router";
 import cors from "cors";
-import session from "express-session";
-import MongoStore from "connect-mongo";
 import cookieParser from "cookie-parser";
-
+import { v4 as uuidv4 } from "uuid";
+import bodyParser from "body-parser";
+import jwt from "jsonwebtoken";
 dotenv.config({
   path:
     process.env.NODE_ENV === "production"
@@ -20,7 +20,7 @@ dotenv.config({
 initMongo();
 
 const app = express();
-
+app.use(bodyParser.json());
 const PORT = process.env.PORT || 8080;
 app.set("trust proxy", 1);
 app.use(cookieParser());
@@ -38,52 +38,40 @@ app.use(
   })
 );
 
-// Configurar sesiones
-app.use(
-  session({
-    secret: "123",
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.DB_KEY,
-    }),
-    cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      secure: false,
-      sameSite: "none",
-    },
-  })
-);
+const SECRET_KEY = "tu_clave_secreta";
+app.use((req: any, res, next) => {
+  const token = req.cookies.token; // Obtener el token de la cookie
+  console.log("este es el token", token);
+  if (!token) {
+    const uuid = uuidv4();
+    const token: any = jwt.sign({ device: uuid }, SECRET_KEY, {
+      algorithm: "HS256",
+      expiresIn: "30d", // El token expira en 30 días
+    });
 
-declare module "express-session" {
-  interface SessionData {
-    user: {
-      id: any;
-    };
+    // Establece el token en una cookie segura con atributos SameSite y Secure
+    res.cookie("token", token, {
+      httpOnly: true, // No accesible desde JavaScript del lado del cliente
+      secure: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días en milisegundos
+      sameSite: "none", // Cambia a 'Strict' o 'Lax' si no necesitas soporte para cookies de terceros
+    });
+
+    return res.json({ message: token });
   }
-}
-
-app.use((req, res, next) => {
-  console.log("esta es la session existente en el moment", req.session.user);
-
-  if (!req.session.user) {
-    req.session.user = { id: Date.now().toString() };
-    console.log(
-      "Nueva sesión creada:",
-      req.session.user.id,
-      "en el puersto",
-      PORT
-    );
-  } else {
-    console.log("Sesión existente:", req.session.user.id);
-  }
-
-  next();
+  jwt.verify(token, SECRET_KEY, (err: any, decoded: any) => {
+    if (err) {
+      return res.status(403).send("Invalid token");
+    }
+    req.device = decoded.device;
+    next();
+  });
 });
 
-app.get("/", (req, res) => {
-  res.send("¡Bienvenido a mi aplicación en Vercel!");
+app.get("/", (req: any, res) => {
+  console.log("esto devuelve device", req.device);
+
+  res.send({ message: "This is a protected route", device: req.device });
 });
 
 app.use("/api", productRouter);
