@@ -100,9 +100,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req: any, res) => {
-  console.log("esto devuelve device", req.device);
-
-  res.send({ message: "This is a protected route", device: req.device });
+  res.send({ message: "Hola Vercel !!!", device: req.device });
 });
 
 app.use("/api", productRouter);
