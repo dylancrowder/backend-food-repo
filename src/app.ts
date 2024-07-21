@@ -54,7 +54,7 @@ app.use((req: any, res, next) => {
       httpOnly: true, // No accesible desde JavaScript del lado del cliente
       secure: true,
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días en milisegundos
-      sameSite: "strict", // Cambia a 'Strict' o 'Lax' si no necesitas soporte para cookies de terceros
+      sameSite: "none", // Cambia a 'Strict' o 'Lax' si no necesitas soporte para cookies de terceros
     });
 
     return res.json({ message: token });
