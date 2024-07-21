@@ -32,7 +32,6 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://ecommerce-food-dylan.netlify.app",
       "https://food-ecommerce-coral.vercel.app",
     ],
     credentials: true,
