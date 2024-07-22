@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 // Configurar CORS
 app.use(
   cors({
-    origin: "*", // Permitir solicitudes desde esta URL
+    origin: "https://food-ecommerce-git-main-dylancrowders-projects.vercel.app", // Permitir solicitudes desde esta URL
     credentials: true,
   })
 );
