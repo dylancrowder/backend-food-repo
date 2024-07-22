@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 // Configurar CORS
 app.use(
   cors({
-    origin: "https://food-ecommerce-coral.vercel.app", // Permitir solicitudes desde esta URL
+    origin: true,
     credentials: true,
   })
 );
@@ -52,7 +52,6 @@ app.use((req: any, res, next) => {
       secure: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
       sameSite: "none",
-      domain: "https://backend-dun-six-41.vercel.app",
     });
 
     return res.json({ message: token });
