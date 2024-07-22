@@ -30,10 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 // Configurar CORS
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://food-ecommerce-coral.vercel.app",
-    ],
+    origin: "https://food-ecommerce-coral.vercel.app", // Permitir solicitudes desde esta URL
     credentials: true,
   })
 );
