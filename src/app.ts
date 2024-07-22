@@ -43,15 +43,16 @@ app.use((req: any, res, next) => {
     const uuid = uuidv4();
     const token: any = jwt.sign({ device: uuid }, SECRET_KEY, {
       algorithm: "HS256",
-      expiresIn: "30d", // El token expira en 30 días
+      expiresIn: "30d",
     });
 
     // Establece el token en una cookie segura con atributos SameSite y Secure
     res.cookie("token", token, {
-      httpOnly: true, // No accesible desde JavaScript del lado del cliente
+      httpOnly: true,
       secure: true,
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días en milisegundos
-      sameSite: "none", // Cambia a 'Strict' o 'Lax' si no necesitas soporte para cookies de terceros
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      sameSite: "none",
+      domain: "https://backend-dun-six-41.vercel.app",
     });
 
     return res.json({ message: token });
