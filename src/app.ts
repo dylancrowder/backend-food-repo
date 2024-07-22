@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 // Configurar CORS
 app.use(
   cors({
-    origin: "https://food-ecommerce-coral.vercel.app", // Permitir solicitudes desde esta URL
+    origin: "*", // Permitir solicitudes desde esta URL
     credentials: true,
   })
 );
