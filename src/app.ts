@@ -10,6 +10,7 @@ import cookieParser from "cookie-parser";
 import { v4 as uuidv4 } from "uuid";
 import bodyParser from "body-parser";
 import jwt from "jsonwebtoken";
+
 dotenv.config({
   path:
     process.env.NODE_ENV === "production"
@@ -30,7 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 // Configurar CORS
 app.use(
   cors({
-    origin: true,
+    origin: "https://food-ecommerce-coral.vercel.app",
     credentials: true,
   })
 );
@@ -52,7 +53,6 @@ app.use((req: any, res, next) => {
       secure: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
       sameSite: "none",
-      partitioned: true
     });
 
     return res.json({ message: token });
