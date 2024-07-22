@@ -7,12 +7,7 @@
   "builds": [
     {
       "src": "src/app.ts",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "src/**/*"
-        ]
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -28,7 +23,7 @@
         "OPTIONS"
       ],
       "headers": {
-        "Access-Control-Allow-Origin": "https://food-ecommerce-dylancrowders-projects.vercel.app",
+        "Access-Control-Allow-Origin": "https://food-ecommerce-coral.vercel.app",
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
         "Access-Control-Allow-Headers": "*"
