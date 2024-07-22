@@ -31,7 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 // Configurar CORS
 app.use(
   cors({
-    origin: "https://food-ecommerce-git-main-dylancrowders-projects.vercel.app",
+    origin: "https://ecommerce-food-dylan.netlify.app",
     credentials: true,
   })
 );
