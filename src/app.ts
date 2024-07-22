@@ -52,6 +52,7 @@ app.use((req: any, res, next) => {
       secure: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
       sameSite: "none",
+      partitioned: true
     });
 
     return res.json({ message: token });
