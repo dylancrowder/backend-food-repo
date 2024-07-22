@@ -67,7 +67,7 @@ app.use((req: any, res, next) => {
 });
 
 app.get("/", (req: any, res) => {
-  res.send({ message: "Hola Vercel como estas!!!", device: req.device });
+  res.send({ message: "Hola Vercel como estas!!!!", device: req.device });
 });
 
 app.use("/api", productRouter);
