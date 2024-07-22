@@ -35,6 +35,8 @@ app.use(
       "https://food-ecommerce-coral.vercel.app",
     ],
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Authorization'],
   })
 );
 
