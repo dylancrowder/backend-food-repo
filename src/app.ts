@@ -8,7 +8,7 @@ import cartRouter from "./router/cart.router";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { v4 as uuidv4 } from "uuid";
-import bodyParser from "body-parser";
+
 import jwt from "jsonwebtoken";
 
 dotenv.config({
@@ -21,7 +21,6 @@ dotenv.config({
 initMongo();
 
 const app = express();
-app.use(bodyParser.json());
 const PORT = process.env.PORT || 8080;
 app.set("trust proxy", 1);
 app.use(cookieParser());
@@ -36,8 +35,8 @@ app.use(
   })
 );
 
-const SECRET_KEY = "tu_clave_secreta";
 app.use((req: any, res, next) => {
+  const SECRET_KEY = "tu_clave_secreta";
   const token = req.cookies.token; // Obtener el token de la cookie
   console.log("este es el token", token);
   if (!token) {
@@ -52,7 +51,7 @@ app.use((req: any, res, next) => {
       httpOnly: true,
       secure: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      sameSite: "none",
+      sameSite: "lax",
     });
 
     return res.json({ message: token });
