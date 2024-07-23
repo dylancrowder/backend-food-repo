@@ -10,6 +10,7 @@ import cookieParser from "cookie-parser";
 import { v4 as uuidv4 } from "uuid";
 import bodyParser from "body-parser";
 import jwt from "jsonwebtoken";
+
 dotenv.config({
   path:
     process.env.NODE_ENV === "production"
@@ -38,31 +39,33 @@ app.use(
   })
 );
 
-const SECRET_KEY = "tu_clave_secreta";
 app.use((req: any, res, next) => {
-  const token = req.cookies.token; // Obtener el token de la cookie
-  console.log("este es el token", token);
+  const SECRET_KEY = "tu_clave_secreta";
+  let token = req.cookies.token;
+
   if (!token) {
     const uuid = uuidv4();
-    const token: any = jwt.sign({ device: uuid }, SECRET_KEY, {
+    token = jwt.sign({ device: uuid }, SECRET_KEY, {
       algorithm: "HS256",
-      expiresIn: "30d", // El token expira en 30 días
+      expiresIn: "30d",
     });
 
-    // Establece el token en una cookie segura con atributos SameSite y Secure
     res.cookie("token", token, {
-      httpOnly: true, // No accesible desde JavaScript del lado del cliente
-      secure: true,
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días en milisegundos
-      sameSite: "none", // Cambia a 'Strict' o 'Lax' si no necesitas soporte para cookies de terceros
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // usar secure solo en producción
+      sameSite: "strict", // asegura que la cookie solo sea enviada en solicitudes de primer partido
     });
 
-    return res.json({ message: token });
+    // Redirige al cliente para que obtenga la cookie en la siguiente solicitud
+    res.redirect(req.originalUrl);
+    return;
   }
+
   jwt.verify(token, SECRET_KEY, (err: any, decoded: any) => {
     if (err) {
       return res.status(403).send("Invalid token");
     }
+
     req.device = decoded.device;
     next();
   });
