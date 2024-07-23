@@ -51,7 +51,8 @@ app.use((req: any, res, next) => {
       httpOnly: true,
       secure: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      sameSite: "lax",
+      sameSite: "none",
+      domain: "https://backendfood.vercel.app",
     });
 
     return res.json({ message: token });
