@@ -36,7 +36,10 @@ app.use(
 );
 
 app.use((req: any, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://ecommerce-food-dylan.netlify.app"
+  );
   const SECRET_KEY = "tu_clave_secreta";
   const token = req.cookies.token;
   console.log("este es el token", token);
