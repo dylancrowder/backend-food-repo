@@ -37,7 +37,7 @@ app.use(
 
 app.use((req: any, res, next) => {
   const SECRET_KEY = "tu_clave_secreta";
-  const token = req.cookies.token; // Obtener el token de la cookie
+  const token = req.cookies.token; 
   console.log("este es el token", token);
   if (!token) {
     const uuid = uuidv4();
@@ -46,7 +46,7 @@ app.use((req: any, res, next) => {
       expiresIn: "30d",
     });
 
-    // Establece el token en una cookie segura con atributos SameSite y Secure
+
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
