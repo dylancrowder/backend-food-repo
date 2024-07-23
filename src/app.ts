@@ -36,8 +36,9 @@ app.use(
 );
 
 app.use((req: any, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
   const SECRET_KEY = "tu_clave_secreta";
-  const token = req.cookies.token; 
+  const token = req.cookies.token;
   console.log("este es el token", token);
   if (!token) {
     const uuid = uuidv4();
@@ -45,7 +46,6 @@ app.use((req: any, res, next) => {
       algorithm: "HS256",
       expiresIn: "30d",
     });
-
 
     res.cookie("token", token, {
       httpOnly: true,
