@@ -49,10 +49,9 @@ app.use((req: any, res, next) => {
     // Establece el token en una cookie segura con atributos SameSite y Secure
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
+      secure: false,
       maxAge: 30 * 24 * 60 * 60 * 1000,
       sameSite: "none",
-      signed: true,
     });
 
     return res.json({ message: token });
