@@ -32,7 +32,7 @@ app.use(
   cors({
     origin: "https://ecommerce-food-dylan.netlify.app",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    preflightContinue: false,
+    credentials: true,
     optionsSuccessStatus: 204,
   })
 );
