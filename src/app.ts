@@ -21,7 +21,7 @@ dotenv.config({
 initMongo();
 
 const app = express();
-const PORT =  8080;
+const PORT = 8080;
 app.set("trust proxy", 1);
 app.use(cookieParser());
 app.use(express.json());
@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 // Configurar CORS
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://ecommerce-food-dylan.netlify.app",
     credentials: true,
   })
 );
@@ -64,8 +64,6 @@ app.use((req: any, res, next) => {
     next();
   });
 });
-
-
 
 app.use("/api", productRouter);
 app.use("/api/cart", cartRouter);
