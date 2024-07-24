@@ -31,13 +31,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: "https://ecommerce-food-dylan.netlify.app",
-    credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   })
 );
 
 const SECRET_KEY = "PALOMA";
 
-app.get("/", (req, res) => {
+app.get("/token", (req, res) => {
   // Genera un nuevo token y envíalo en la respuesta
   const uuid = uuidv4();
   const newToken = jwt.sign({ device: uuid }, SECRET_KEY, {
