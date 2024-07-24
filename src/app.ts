@@ -41,7 +41,7 @@ app.use((req: any, res, next) => {
     "https://ecommerce-food-dylan.netlify.app"
   );
   const SECRET_KEY = "tu_clave_secreta";
-  const token = req.cookies.token;
+  let token = req.cookies.token;
   console.log("este es el token", token);
   if (!token) {
     const uuid = uuidv4();
@@ -57,7 +57,7 @@ app.use((req: any, res, next) => {
       sameSite: "none",
     });
 
-    return res.json({ message: token });
+    next();
   }
   jwt.verify(token, SECRET_KEY, (err: any, decoded: any) => {
     if (err) {
