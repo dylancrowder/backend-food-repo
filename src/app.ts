@@ -10,7 +10,7 @@ import cookieParser from "cookie-parser";
 import { v4 as uuidv4 } from "uuid";
 
 import jwt from "jsonwebtoken";
-
+const SECRET_KEY = "tu_clave_secreta";
 dotenv.config({
   path:
     process.env.NODE_ENV === "production"
@@ -34,31 +34,23 @@ app.use(
     credentials: true,
   })
 );
+app.get("/", (req, res) => {
+  const uuid = uuidv4();
+  const newToken = jwt.sign({ device: uuid }, SECRET_KEY, {
+    algorithm: "HS256",
+    expiresIn: "30d",
+  });
 
+  res.json({ token: newToken });
+});
 app.use((req: any, res, next) => {
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://ecommerce-food-dylan.netlify.app"
-  );
-  const SECRET_KEY = "tu_clave_secreta";
-  let token = req.cookies.token;
+  const token = req.headers.authorization?.split(" ")[1];
   console.log("este es el token", token);
+
   if (!token) {
-    const uuid = uuidv4();
-    const token: any = jwt.sign({ device: uuid }, SECRET_KEY, {
-      algorithm: "HS256",
-      expiresIn: "30d",
-    });
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-      sameSite: "lax",
-    });
-
-    next();
+    return res.status(403).send("No token provided");
   }
+
   jwt.verify(token, SECRET_KEY, (err: any, decoded: any) => {
     if (err) {
       return res.status(403).send("Invalid token");
@@ -66,10 +58,6 @@ app.use((req: any, res, next) => {
     req.device = decoded.device;
     next();
   });
-});
-
-app.get("/", (req: any, res) => {
-  res.send({ message: "Hola Vercel como estas!!!!", device: req.device });
 });
 
 app.use("/api", productRouter);
