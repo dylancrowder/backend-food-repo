@@ -10,7 +10,6 @@ import cookieParser from "cookie-parser";
 import { v4 as uuidv4 } from "uuid";
 
 import jwt from "jsonwebtoken";
-const SECRET_KEY = "tu_clave_secreta";
 
 dotenv.config({
   path:
@@ -22,7 +21,7 @@ dotenv.config({
 initMongo();
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT =  8080;
 app.set("trust proxy", 1);
 app.use(cookieParser());
 app.use(express.json());
@@ -31,11 +30,15 @@ app.use(express.urlencoded({ extended: true }));
 // Configurar CORS
 app.use(
   cors({
-    origin: "https://ecommerce-food-dylan.netlify.app",
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
+
+const SECRET_KEY = "PALOMA";
+
 app.get("/", (req, res) => {
+  // Genera un nuevo token y envíalo en la respuesta
   const uuid = uuidv4();
   const newToken = jwt.sign({ device: uuid }, SECRET_KEY, {
     algorithm: "HS256",
@@ -44,10 +47,8 @@ app.get("/", (req, res) => {
 
   res.json({ token: newToken });
 });
-app.use((req: any, res, next) => {
-  const SECRET_KEY = "tu_clave_secreta";
-  let token = req.cookies.token;
 
+app.use((req: any, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   console.log("este es el token", token);
 
@@ -55,32 +56,16 @@ app.use((req: any, res, next) => {
     return res.status(403).send("No token provided");
   }
 
-    const uuid = uuidv4();
-    token = jwt.sign({ device: uuid }, SECRET_KEY, {
-      algorithm: "HS256",
-      expiresIn: "30d",
-    });
-
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // usar secure solo en producción
-      sameSite: "strict", // asegura que la cookie solo sea enviada en solicitudes de primer partido
-    });
-
-    // Redirige al cliente para que obtenga la cookie en la siguiente solicitud
-    res.redirect(req.originalUrl);
-    return;
-  }
-
   jwt.verify(token, SECRET_KEY, (err: any, decoded: any) => {
     if (err) {
       return res.status(403).send("Invalid token");
     }
-
     req.device = decoded.device;
     next();
   });
 });
+
+
 
 app.use("/api", productRouter);
 app.use("/api/cart", cartRouter);
