@@ -33,7 +33,6 @@ app.use(
     origin: "https://ecommerce-food-dylan.netlify.app",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
-    optionsSuccessStatus: 204,
   })
 );
 
