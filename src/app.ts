@@ -7,7 +7,6 @@ import { v4 as uuidv4 } from "uuid";
 import compression from "compression";
 import jwt from "jsonwebtoken";
 
-
 import { initMongo } from "./db/mongoConect";
 import { errorHandlerMiddleware } from "./errors/middlewareError";
 
@@ -35,7 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 // Configurar CORS
 app.use(
   cors({
-    origin: " http://localhost:5173",
+    origin: "https://ecommerce-food-dylan.netlify.app",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
