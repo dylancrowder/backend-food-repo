@@ -6,7 +6,7 @@ import cors from "cors";
 import { v4 as uuidv4 } from "uuid";
 import compression from "compression";
 import jwt from "jsonwebtoken";
-import helmet from "helmet";
+
 
 import { initMongo } from "./db/mongoConect";
 import { errorHandlerMiddleware } from "./errors/middlewareError";
@@ -25,9 +25,9 @@ initMongo();
 
 const app = express();
 app.use(compression());
-app.use(helmet());
+
 const PORT = 8080;
-app.set("trust proxy", 1);
+app.set("trust prox", 1);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
