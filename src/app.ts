@@ -1,15 +1,18 @@
 import express from "express";
 import morgan from "morgan";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import { v4 as uuidv4 } from "uuid";
+import compression from "compression";
+import jwt from "jsonwebtoken";
+import helmet from "helmet";
+
 import { initMongo } from "./db/mongoConect";
 import { errorHandlerMiddleware } from "./errors/middlewareError";
+
 import productRouter from "./router/products.router";
 import cartRouter from "./router/cart.router";
-import cors from "cors";
-import cookieParser from "cookie-parser";
-import { v4 as uuidv4 } from "uuid";
-
-import jwt from "jsonwebtoken";
 
 dotenv.config({
   path:
@@ -21,6 +24,8 @@ dotenv.config({
 initMongo();
 
 const app = express();
+app.use(compression());
+app.use(helmet());
 const PORT = 8080;
 app.set("trust proxy", 1);
 app.use(cookieParser());
@@ -30,7 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 // Configurar CORS
 app.use(
   cors({
-    origin: "https://ecommerce-food-dylan.netlify.app",
+    origin: " http://localhost:5173",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
