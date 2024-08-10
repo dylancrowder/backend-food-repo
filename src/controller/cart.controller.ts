@@ -30,7 +30,6 @@ export class CartController {
       }
 
       await cart.save();
-      console.log(`Producto ${productID} añadido al carrito correctamente.`);
     } catch (error) {
       console.error(
         `Error al añadir el producto ${productID} al carrito:`,
@@ -47,7 +46,6 @@ export class CartController {
       const deleteProductIndex = cart.items.some(
         (item: any, index: any) => cart.items.indexOf(item) !== index
       );
-      console.log(deleteProductIndex);
 
       // Si no se encuentra el producto, lanza un error
       if (deleteProductIndex === -1) {
@@ -73,11 +71,10 @@ export class CartController {
         throw new Error("Failed to update cart");
       }
 
-      console.log("Producto eliminado, resultado:", result);
       return result;
     } catch (error: any) {
       console.log(error);
-      throw error; 
+      throw error;
     }
   }
 
@@ -104,9 +101,6 @@ export class CartController {
       }
 
       await cart.save();
-      console.log(
-        `Cantidad de producto ${productID} disminuida en el carrito correctamente.`
-      );
     } catch (error: any) {
       console.error(
         `Error al disminuir la cantidad del producto ${productID} en el carrito:`,
@@ -136,9 +130,6 @@ export class CartController {
       cart.items[existingItemIndex].quantity += 1;
 
       await cart.save();
-      console.log(
-        `Cantidad de producto ${productID} aumentada en el carrito correctamente.`
-      );
     } catch (error: any) {
       console.error(
         `Error al aumentar la cantidad del producto ${productID} en el carrito:`,
