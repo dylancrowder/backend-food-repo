@@ -3,16 +3,18 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { v4 as uuidv4 } from "uuid";
 import compression from "compression";
 import jwt from "jsonwebtoken";
-import helmet from "helmet";
+import { v4 as uuidv4 } from "uuid";
 
 import { initMongo } from "./db/mongoConect";
 import { errorHandlerMiddleware } from "./errors/middlewareError";
 
 import productRouter from "./router/products.router";
 import cartRouter from "./router/cart.router";
+import payment from "./router/payment.router";
+
+import { verifyToken } from "./middlewares/middlewares";
 
 dotenv.config({
   path:
@@ -25,7 +27,7 @@ initMongo();
 
 const app = express();
 app.use(compression());
-app.use(helmet());
+
 const PORT = 8080;
 app.set("trust proxy", 1);
 app.use(cookieParser());
@@ -35,7 +37,12 @@ app.use(express.urlencoded({ extended: true }));
 // Configurar CORS
 app.use(
   cors({
-    origin: " http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://sandbox.mercadopago.com.ar",
+      "https://www.mercadopago.com.ar",
+      "https://tournament-sent-nebraska-alpine.trycloudflare.com",
+    ],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
@@ -44,7 +51,6 @@ app.use(
 const SECRET_KEY = "PALOMA";
 
 app.get("/token", (req, res) => {
-  // Genera un nuevo token y envíalo en la respuesta
   const uuid = uuidv4();
   const newToken = jwt.sign({ device: uuid }, SECRET_KEY, {
     algorithm: "HS256",
@@ -54,27 +60,10 @@ app.get("/token", (req, res) => {
   res.json({ token: newToken });
 });
 
-app.use((req: any, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  console.log("este es el token", token);
-
-  if (!token) {
-    return res.status(403).send("No token provided");
-  }
-
-  jwt.verify(token, SECRET_KEY, (err: any, decoded: any) => {
-    if (err) {
-      return res.status(403).send("Invalid token");
-    }
-    req.device = decoded.device;
-    next();
-  });
-});
-
-app.use("/api", productRouter);
-app.use("/api/cart", cartRouter);
-
 app.use(morgan("dev"));
+app.use("/api", verifyToken, productRouter);
+app.use("/api/cart", verifyToken, cartRouter);
+app.use("/payment", payment);
 
 app.use(errorHandlerMiddleware);
 
