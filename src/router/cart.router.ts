@@ -31,7 +31,7 @@ router.get("/find", async (req: any, res, next) => {
   }
 });
 /* delete all products */
-router.delete("/delete/:productID", async (req:any, res, next) => {
+router.delete("/delete/:productID", async (req: any, res, next) => {
   try {
     const { productID } = req.params;
     const session = req.device;
