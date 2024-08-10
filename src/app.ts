@@ -14,6 +14,8 @@ import productRouter from "./router/products.router";
 import cartRouter from "./router/cart.router";
 import payment from "./router/payment.router";
 
+import { verifyToken } from "./middlewares/middlewares";
+
 dotenv.config({
   path:
     process.env.NODE_ENV === "production"
@@ -49,7 +51,7 @@ app.use(
 
 const SECRET_KEY = "PALOMA";
 
-/* app.get("/token", (req, res) => {
+app.get("/token", (req, res) => {
   const uuid = uuidv4();
   const newToken = jwt.sign({ device: uuid }, SECRET_KEY, {
     algorithm: "HS256",
@@ -59,23 +61,9 @@ const SECRET_KEY = "PALOMA";
   res.json({ token: newToken });
 });
 
-app.use((req: any, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) {
-    return res.status(403).send("No token provided");
-  }
-
-  jwt.verify(token, SECRET_KEY, (err: any, decoded: any) => {
-    if (err) {
-      return res.status(403).send("Invalid token");
-    }
-    req.device = decoded.device;
-    next();
-  });
-}); */
 app.use(morgan("dev"));
-app.use("/api", productRouter);
-app.use("/api/cart", cartRouter);
+app.use("/api", verifyToken, productRouter);
+app.use("/api/cart", verifyToken, cartRouter);
 app.use("/payment", payment);
 
 app.use(errorHandlerMiddleware);
