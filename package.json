@@ -8,7 +8,8 @@
     "production": "tsc && cross-env NODE_ENV=production node dist/app.js",
     "test": "jest --detectOpenHandles",
     "build": "tsc",
-    "dev": "nodemon --exec cross-env NODE_ENV=development ts-node src/app.ts"
+    "dev": "nodemon --exec cross-env NODE_ENV=development ts-node src/app.ts",
+    "ins": "cross-env NODE_ENV=development tsx --inspect src/app.ts"
   },
   "keywords": [],
   "author": "",
@@ -30,7 +31,7 @@
     "morgan": "^1.10.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.16.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
@@ -41,8 +42,8 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
-    "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
+    "mercadopago": "^2.0.11",
     "mongodb": "^6.7.0",
     "mongoose": "^8.4.4",
     "passport-jwt": "^4.0.1",
