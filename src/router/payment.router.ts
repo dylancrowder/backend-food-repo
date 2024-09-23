@@ -5,7 +5,7 @@ import { CartService } from "../services/cart.services";
 const router = Router();
 const client = new MercadoPagoConfig({
   accessToken:
-    "TEST-5722182540761857-080718-61e8711ceee9c161a7b034ffbf8e6d66-150714867",
+    "APP_USR-3493305980897305-080811-d5235d475648fb7da1bf1a84039e280c-1938376502",
   options: { timeout: 5000, idempotencyKey: "abc" },
 });
 
@@ -21,22 +21,48 @@ router.post("/pay", async (req: any, res) => {
       id: item.product._id,
     }));
 
+    // Obtener información adicional del cliente
+    const {
+      phone,
+      street,
+      street_number,
+      zip_code,
+      dni,
+      firstName,
+      lastName,
+    } = req.body;
+
     const preference: any = await new Preference(client).create({
       body: {
         items: items,
+        payer: {
+          name: firstName, // Nombre del cliente
+          surname: lastName, // Apellido del cliente
+          phone: {
+            area_code: "11",
+            number: phone, // Número de teléfono
+          },
+          address: {
+            street_name: street,
+            street_number: street_number,
+            zip_code: zip_code,
+          },
+          identification: {
+            type: "DNI",
+            number: dni, // DNI
+          },
+        },
         back_urls: {
           success: "http://localhost:5173/success-pay",
           failure: "http://localhost:5173/failue-pay",
           pending: "http://localhost:5173/pending-pay",
         },
         notification_url:
-          "https://tournament-sent-nebraska-alpine.trycloudflare.com/payment/noti",
+          "https://cj-predicted-jonathan-analyst.trycloudflare.com/payment/noti",
       },
     });
 
-    console.log("esta es kla preference" , preference);
-    
-    // Send the init_point URL to the client
+    // Enviar la URL de init_point al cliente
     res.json({ redirectUrl: preference.init_point });
   } catch (error) {
     console.error("Error creating preference:", error);

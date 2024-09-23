@@ -28,7 +28,7 @@ initMongo();
 const app = express();
 app.use(compression());
 
-const PORT = 8080;
+const PORT = process.env.PORT;
 app.set("trust proxy", 1);
 app.use(cookieParser());
 app.use(express.json());

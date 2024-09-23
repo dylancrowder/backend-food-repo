@@ -7,8 +7,8 @@ const router = express.Router();
 /* create  */
 router.post("/create", async (req: any, res, next) => {
   try {
-    const { productID } = req.body;
     const sessionI: any = req.device;
+    const { productID } = req.body;
 
     const product = await CartController.buy(sessionI, productID);
 
