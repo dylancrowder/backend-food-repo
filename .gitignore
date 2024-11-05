@@ -1,5 +1,5 @@
 node_modules
-.env
-.vercel
+.env.development
+.vercel.production
 .jest.config.js
 dist
