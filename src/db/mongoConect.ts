@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const initMongo = async () => {
-  const URI: string | undefined = process.env.DB_KEY;
+  const URI: string | undefined = process.env.DB_KEY ;
   if (!URI) {
     throw new Error("MongoDB URI not found in environment variables");
   }

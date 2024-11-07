@@ -4,12 +4,7 @@
   "description": "",
   "main": "app.ts",
   "scripts": {
-    "start": "cross-env NODE_ENV=development ts-node src/app.ts",
-    "production": "tsc && cross-env NODE_ENV=production node dist/app.js",
-    "test": "jest --detectOpenHandles",
-    "build": "tsc",
-    "dev": "nodemon  --exec cross-env NODE_ENV=development ts-node src/app.ts",
-    "ins": "cross-env NODE_ENV=development tsx --inspect src/app.ts"
+    "test": "jest --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
