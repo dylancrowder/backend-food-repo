@@ -1,11 +1,12 @@
-import { ObjectId } from "mongodb"; // Asumiendo que estás usando MongoDB ObjectId
+import { ObjectId } from "mongodb";
 import { CartService } from "../services/cart.services";
 import Cart from "../db/schemas/cart.schema";
 import { diferentProduct } from "../errors/causeError";
 import { CustomError } from "../errors/customError";
 import enumError from "../errors/enumError";
 
-export class CartController {
+export class CartController { 
+
   static async buy(session: string, productID: string) {
     try {
       const cart: any = await CartService.findOne(session);
@@ -15,7 +16,6 @@ export class CartController {
         return;
       }
 
-      // Buscamos si el producto ya está en el carrito
       const existingItemIndex = cart.items.findIndex((item: any) => {
         return item.product._id.toString() === productID.toString();
       });
@@ -110,7 +110,6 @@ export class CartController {
     }
   }
 
-  // Añadir una cantidad de un producto al carrito
   static async addOneQuantity(session: string, productID: string) {
     try {
       const cart: any = await CartService.findOne(session);

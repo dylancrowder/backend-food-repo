@@ -42,7 +42,7 @@ app.use(
       "https://sandbox.mercadopago.com.ar",
       "https://www.mercadopago.com.ar",
       "https://tournament-sent-nebraska-alpine.trycloudflare.com",
-      "https://ecommerce-food-dylan.netlify.app"
+      "https://ecommerce-food-dylan.netlify.app",
     ],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
@@ -62,7 +62,7 @@ app.get("/token", (req, res) => {
 });
 
 app.use(morgan("dev"));
-app.use("/api", verifyToken, productRouter);
+app.use("/api", productRouter);
 app.use("/api/cart", verifyToken, cartRouter);
 app.use("/payment", payment);
 
