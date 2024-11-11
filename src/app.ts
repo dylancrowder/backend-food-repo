@@ -1,3 +1,4 @@
+// app.ts
 import express from "express";
 import morgan from "morgan";
 import dotenv from "dotenv";
@@ -6,9 +7,10 @@ import cors from "cors";
 import compression from "compression";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
+import pinoHttp from "pino-http";
+import helmet from "helmet";
 
 import { initMongo } from "./db/mongoConect";
-import { errorHandlerMiddleware } from "./errors/middlewareError";
 
 import productRouter from "./router/products.router";
 import cartRouter from "./router/cart.router";
@@ -23,18 +25,20 @@ dotenv.config({
       : ".env.development",
 });
 
+// Inicialización de la base de datos MongoDB
 initMongo();
 
 const app = express();
-app.use(compression());
 
-const PORT = 8080;
-app.set("trust proxy", 1);
+app.use(helmet());
+app.use(compression());
+app.use(morgan("dev"));
+app.use(pinoHttp());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configurar CORS
+// Configuración de CORS
 app.use(
   cors({
     origin: [
@@ -51,6 +55,7 @@ app.use(
 
 const SECRET_KEY = "PALOMA";
 
+// Ruta para generar un token
 app.get("/token", (req, res) => {
   const uuid = uuidv4();
   const newToken = jwt.sign({ device: uuid }, SECRET_KEY, {
@@ -61,15 +66,12 @@ app.get("/token", (req, res) => {
   res.json({ token: newToken });
 });
 
-app.use(morgan("dev"));
+// Rutas de la aplicación
 app.use("/api", productRouter);
 app.use("/api/cart", verifyToken, cartRouter);
 app.use("/payment", payment);
 
-app.use(errorHandlerMiddleware);
+// Middleware de manejo de errores
 
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
 
 export default app;

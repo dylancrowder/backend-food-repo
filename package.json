@@ -2,9 +2,14 @@
   "name": "backendfood",
   "version": "1.0.0",
   "description": "",
-  "main": "app.ts",
+  "main": "server.ts",
   "scripts": {
-    "test": "jest --detectOpenHandles"
+    "start": "cross-env NODE_ENV=development ts-node src/server.ts",
+    "production": "tsc && cross-env NODE_ENV=production node dist/server.js",
+    "test": "jest --detectOpenHandles",
+    "build": "tsc",
+    "dev": "nodemon --exec cross-env NODE_ENV=development ts-node src/server.ts",
+    "ins": "cross-env NODE_ENV=development tsx --inspect src/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -37,12 +42,15 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
+    "helmet": "8.0.0",
     "jsonwebtoken": "^9.0.2",
     "mercadopago": "^2.0.11",
     "mongodb": "^6.7.0",
     "mongoose": "^8.4.4",
     "nodemon": "^3.1.7",
     "passport-jwt": "^4.0.1",
+    "pino": "9.5.0",
+    "pino-http": "10.3.0",
     "uuid": "^10.0.0"
   }
 }

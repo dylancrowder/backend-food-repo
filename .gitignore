@@ -4,3 +4,4 @@ node_modules
 .vercel.production
 .jest.config.js
 dist
+.npmrc
